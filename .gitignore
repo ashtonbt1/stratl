@@ -30,3 +30,7 @@ $RECYCLE.BIN/
 .vscode/
 .history/
 *.code-workspace
+
+# Custom folders to keep hidden
+data_2021_09/
+low_level_2021_09/
