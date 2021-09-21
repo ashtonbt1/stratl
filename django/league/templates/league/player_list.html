@@ -8,7 +8,7 @@
 
 {% for player in players %}
 <div class="player">
-    <a href="{{ player.bbref_link }}">{{ player }}</a>
+    <a href="{% url 'player_detail' player.id %}">{{ player }}</a>
 </div>
 {% endfor %}
 {% endblock %}
