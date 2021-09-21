@@ -1,0 +1,10 @@
+{% extends 'league/base.html' %}
+
+{% block content %}
+<h1>{{ player.first_name }} {{ player.last_name }}</h1>
+<p><a href="{{ player.bbref_link }}">Baseball Reference Link</a></p>
+<h2>Hitter Cards</h2>
+{% for h in player.hitter_set.all %}
+<div>{{ h }}</div>
+{% endfor %}
+{% endblock %}
