@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'league.apps.LeagueConfig',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +91,8 @@ DATABASES = {
     }
 }
 
+# Import-export configuration
+IMPORT_EXPORT_USE_TRANSACTIONS = env('IMPORT_EXPORT_USE_TRANSACTIONS')
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
