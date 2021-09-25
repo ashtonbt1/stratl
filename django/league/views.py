@@ -1,8 +1,8 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from tablib import Dataset
 
-from .models import Player
-from .forms import PlayerForm
+from .models import Player, Position, Hitter
+from .forms import PlayerForm, PositionForm
 from .resources import PlayerResource
 
 # Create your views here.
@@ -36,6 +36,18 @@ def player_edit(request, pk):
     else:
         form = PlayerForm(instance=player)
     return render(request, 'league/player_edit.html', {'form': form})
+
+def position_new(request, pk):
+    hitter = get_object_or_404(Hitter, pk=pk)
+    if request.method == 'POST':
+        form = PositionForm(request.POST)
+        if form.is_valid():
+            position = form.save(commit=False)
+            position.save()
+            return redirect('player_detail', pk=hitter.parent_player.pk)
+    else:
+        form = PositionForm(initial={'hitter': hitter.pk})
+    return render(request, 'league/position_edit.html', {'form': form, 'hitter': hitter})
 
 def simple_upload(request):
     if request.method == 'POST':

@@ -31,6 +31,110 @@ POWER_CHOICES = (
     ("W", "W"),
 )
 
+POS_CHOICES = (
+    ("C", "C"),
+    ("1B", "1B"),
+    ("2B", "2B"),
+    ("3B", "3B"),
+    ("SS", "SS"),
+    ("LF", "LF"),
+    ("CF", "CF"),
+    ("RF", "RF"),
+)
+
+ROLLMOD_CHOICES = (
+    ("N", "Normal"),
+    ("S", "Split"),
+    ("BS", "Ballpark Single"),
+    ("BO", "Ballpark Open"),
+    ("BH", "Ballpark HR"),
+    ("BHS", "Ballpark HR Split"),
+    ("INJ", "Injury Chance"),
+    ("C", "Clutch"),
+    ("F", "Fatigue"),
+)
+
+ROLLRESULT_CHOICES = (
+    ("CATCH-X", "CATCH-X"),
+	("DO", "DO"),
+	("DOUBLE**", "DOUBLE**"),
+	("DO**", "DO**"),
+	("DOUBLE (cf)", "DOUBLE (cf)"),
+	("DOUBLE (lf)", "DOUBLE (lf)"),
+	("DOUBLE (rf)", "DOUBLE (rf)"),
+	("FLY (cf) X", "FLY (cf) X"),
+	("FLY (lf) X", "FLY (lf) X"),
+	("FLY (rf) X", "FLY (rf) X"),
+	("GB (1b) X", "GB (1b) X"),
+	("GB (2b) X", "GB (2b) X"),
+	("GB (3b) X", "GB (3b) X"),
+	("GB (p) X", "GB (p) X"),
+	("GB (ss) X", "GB (ss) X"),
+	("HBP", "HBP"),
+	("HOMERUN", "HOMERUN"),
+	("HR", "HR"),
+	("N-HR", "N-HR"),
+	("SI*", "SI*"),
+	("SI**", "SI**"),
+	("SINGLE (cf)", "SINGLE (cf)"),
+	("SINGLE (lf)", "SINGLE (lf)"),
+	("SINGLE (rf)", "SINGLE (rf)"),
+	("SINGLE*", "SINGLE*"),
+	("SINGLE**", "SINGLE**"),
+	("TR", "TR"),
+	("TRIPLE", "TRIPLE"),
+	("WALK", "WALK"),
+	("fly (cf) A", "fly (cf) A"),
+	("fly (cf) B", "fly (cf) B"),
+	("fly (cf) B?", "fly (cf) B?"),
+	("fly (cf) C", "fly (cf) C"),
+	("fly (lf) B", "fly (lf) B"),
+	("fly (lf) B?", "fly (lf) B?"),
+	("fly (lf) C", "fly (lf) C"),
+	("fly (rf) A", "fly (rf) A"),
+	("fly (rf) B", "fly (rf) B"),
+	("fly (rf) B?", "fly (rf) B?"),
+	("fly (rf) C", "fly (rf) C"),
+	("foulout (1b)", "foulout (1b)"),
+	("foulout (3b)", "foulout (3b)"),
+	("foulout (c)", "foulout (c)"),
+	("gb (1b) A", "gb (1b) A"),
+	("gb (1b) A+", "gb (1b) A+"),
+	("gb (1b) B", "gb (1b) B"),
+	("gb (1b) C", "gb (1b) C"),
+	("gb (2b) A", "gb (2b) A"),
+	("gb (2b) A+", "gb (2b) A+"),
+	("gb (2b) B", "gb (2b) B"),
+	("gb (2b) B+", "gb (2b) B+"),
+	("gb (2b) C", "gb (2b) C"),
+	("gb (3b) A", "gb (3b) A"),
+	("gb (3b) B", "gb (3b) B"),
+	("gb (p) A", "gb (p) A"),
+	("gb (p) B", "gb (p) B"),
+	("gb (ss) A", "gb (ss) A"),
+	("gb (ss) A+", "gb (ss) A+"),
+	("gb (ss) B", "gb (ss) B"),
+	("gb (ss) B+", "gb (ss) B+"),
+	("lineout (1b)", "lineout (1b)"),
+	("lineout (2b)", "lineout (2b)"),
+	("lineout (3b)", "lineout (3b)"),
+	("lineout (ss)", "lineout (ss)"),
+	("lo", "lo"),
+	("lo (1b)", "lo (1b)"),
+	("lo (1b) max", "lo (1b) max"),
+	("lo (2b)", "lo (2b)"),
+	("lo (2b) max", "lo (2b) max"),
+	("lo (3b)", "lo (3b)"),
+	("lo (3b) max", "lo (3b) max"),
+	("lo (ss)", "lo (ss)"),
+	("lo (ss) max", "lo (ss) max"),
+	("popout (1b)", "popout (1b)"),
+	("popout (2b)", "popout (2b)"),
+	("popout (3b)", "popout (3b)"),
+	("popout (ss)", "popout (ss)"),
+	("strikeout", "strikeout"),
+)
+
 # Create your models here.
 class Player(models.Model):
     id = models.CharField(primary_key=True, null=False, blank=False, unique=True, max_length=25)
@@ -52,7 +156,7 @@ class Player(models.Model):
         ordering = ['last_name', 'first_name', 'id']
 
 
-class Hitter(models.Model):
+class Card(models.Model):
     first_name = models.CharField(null=False, blank=False, max_length=100)
     last_name = models.CharField(null=False, blank=False, max_length=100)
     season = models.PositiveIntegerField(null=False)
@@ -60,6 +164,7 @@ class Hitter(models.Model):
     card_type = models.CharField(null=False, blank=False, max_length=50)
     parent_player = models.ForeignKey(Player, on_delete=models.CASCADE)
 
+class Hitter(Card):
     # Season stats section
     ab = models.PositiveIntegerField(null=False)
     do = models.PositiveIntegerField(null=False)
@@ -88,7 +193,7 @@ class Hitter(models.Model):
     steal_good_lead = models.CharField(null=False, blank=True, max_length=50)
     steal_auto_cs = models.CharField(null=False, blank=True, max_length=50)
     steal_primary = models.PositiveIntegerField(null=False)
-    steal_primary = models.PositiveIntegerField(null=False)
+    steal_secondary = models.PositiveIntegerField(null=False)
     bunt = models.CharField(null=False, blank=False, choices=A_E_CHOICES,
                             max_length=1)
     hnr = models.CharField(null=False, blank=False, choices=A_E_CHOICES,
@@ -107,14 +212,7 @@ class Hitter(models.Model):
         ordering = ['last_name', 'first_name', 'season', 'team', 'card_type']
 
 
-class Pitcher(models.Model):
-    first_name = models.CharField(null=False, blank=False, max_length=100)
-    last_name = models.CharField(null=False, blank=False, max_length=100)
-    season = models.PositiveIntegerField(null=False)
-    team = models.CharField(null=False, blank=False, max_length=5)
-    card_type = models.CharField(null=False, blank=False, max_length=50)
-    parent_player = models.ForeignKey(Player, on_delete=models.CASCADE)
-
+class Pitcher(Card):
     # Season stats section
     w = models.PositiveIntegerField(null=False)
     l = models.PositiveIntegerField(null=False)
@@ -153,7 +251,7 @@ class Pitcher(models.Model):
     steal_good_lead = models.CharField(null=True, blank=True, max_length=50)
     steal_auto_cs = models.CharField(null=True, blank=True, max_length=50)
     steal_primary = models.PositiveIntegerField(null=True)
-    steal_primary = models.PositiveIntegerField(null=True)
+    steal_secondary = models.PositiveIntegerField(null=True)
     running = models.PositiveIntegerField(null=True)
 
     def __str__(self):
@@ -165,3 +263,51 @@ class Pitcher(models.Model):
     
     class Meta:
         ordering = ['last_name', 'first_name', 'season', 'team', 'card_type']
+
+
+class Position(models.Model):
+    hitter = models.ForeignKey(Hitter, on_delete=models.CASCADE)
+    pos = models.CharField(null=False, blank=False, choices=POS_CHOICES, max_length=2)
+    fielding = models.PositiveIntegerField(null=False)
+    error = models.PositiveIntegerField(null=False)
+    arm = models.IntegerField(null=True, blank=True)
+    pb = models.IntegerField(null=True, blank=True)
+    t_err = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        if self.arm:
+            pos_str = f"{self.pos.lower()}-{self.fielding} ({self.arm}) e{self.error}"
+        else:
+            pos_str = f"{self.pos.lower()}-{self.fielding} e{self.error}"
+        if self.pb and self.t_err:
+            pos_str = pos_str + f", T-1-{self.t_err} (pb-{self.pb})"
+        return pos_str
+    
+    def __repr__(self):
+        return f"<{type(self)}> {self}"
+
+
+class RollResult(models.Model):
+    card = models.ForeignKey(Card, on_delete=models.CASCADE)
+    column = models.PositiveIntegerField(null=False)
+    d6_roll = models.PositiveIntegerField(null=False)
+    modifier = models.CharField(blank=True, null=True, choices=ROLLMOD_CHOICES, max_length=5)
+    desc = models.CharField(blank=True, null=True, choices=ROLLRESULT_CHOICES, max_length=60)
+    split = models.PositiveIntegerField(blank=True, null=True)
+    low = models.CharField(blank=True, null=True, choices=ROLLRESULT_CHOICES, max_length=60)
+    high = models.CharField(blank=True, null=True, choices=ROLLRESULT_CHOICES, max_length=60)
+
+    def __str__(self):
+        summary = f"{self.column}-{self.column:02}:"
+        if self.modifier:
+            summary = summary + f" ({self.modifier})"
+        if self.desc:
+            summary = summary + f" {self.desc}"
+        if self.low:
+            summary = summary + f"; {self.low}"
+        if self.split:
+            summary = summary + f"|{self.split}|{self.high}"
+        return summary
+    
+    def __repr__(self):
+        return f"<{type(self)}> {self}"
