@@ -1,8 +1,8 @@
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render, render_to_response
 from tablib import Dataset
 
 from .models import Player, Position, Hitter
-from .forms import PlayerForm, PositionForm
+from .forms import PlayerForm, PositionForm, RollResultFormSet
 from .resources import PlayerResource
 
 # Create your views here.
@@ -62,3 +62,12 @@ def simple_upload(request):
             player_resource.import_data(dataset, dry_run=False)
     
     return render(request, 'league/simple_upload.html')
+
+def build_card_results(request, card_id):
+    if request.method == 'POST':
+        formset = RollResultFormSet(card_id=card_id, data=request.POST)
+        if formset.is_valid():
+            formset.save()
+    else:
+        formset = RollResultFormSet(card_id=card_id)
+    return render_to_response('rollresult_edit.html', {'formset': formset})
