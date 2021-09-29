@@ -1,0 +1,159 @@
+/* Style the form - display items horizontally */
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+/* Add some margins for each label */
+.form-inline label {
+  margin: 5px 10px 5px 0;
+}
+
+/* Style the input fields */
+.form-inline input {
+  vertical-align: middle;
+  margin: 5px 10px 5px 0;
+  padding: 10px;
+  font-size: 0.75em;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+.form-inline input[name="modifier"] {
+  max-width: 120px;
+}
+
+.form-inline input[name="low"] {
+  max-width: 220px;
+}
+
+.form-inline input[name="split"] {
+  max-width: 100px;
+}
+
+/* Style the submit button */
+.form-inline button {
+  padding: 10px 20px;
+  background-color: dodgerblue;
+  border: 1px solid #ddd;
+  color: white;
+}
+
+.form-inline button:hover {
+  background-color: royalblue;
+}
+
+/* Add responsiveness - display the form controls vertically instead of horizontally on screens that are less than 800px wide */
+@media (max-width: 800px) {
+  .form-inline input {
+    margin: 10px 0;
+  }
+
+  .form-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+<!-- 
+Bootstrap docs: https://getbootstrap.com/docs
+-->
+
+<form class="form-inline roll-result" id="roll-form-01-02" action="">
+<input id="modifier-01-02" placeholder="Mod" name="modifier" list="mods_choices" onblur="validateMod(this)">
+<input id="desc-01-02" placeholder="Main Desc" name="description" onblur="validateMod(this)">
+<input id="low-01-02" placeholder="Low Split" name="low" onblur="validateMod(this)">
+<input id="split-01-02" placeholder="Split Cutoff" name="split" onblur="validateMod(this)">
+<input id="high-01-02" placeholder="High Split" name="high" onblur="validateMod(this)">
+</form>
+
+<form class="form-inline roll-result" id="roll-form-01-03" action="">
+<input id="modifier-01-03" placeholder="Mod" name="modifier" list="mods_choices" onblur="validateMod(this)">
+<input id="desc-01-03" placeholder="Main Desc" name="description" onblur="validateMod(this)">
+<input id="low-01-03" placeholder="Low Split" name="low" onblur="validateMod(this)">
+<input id="split-01-03" placeholder="Split Cutoff" name="split" onblur="validateMod(this)">
+<input id="high-01-03" placeholder="High Split" name="high" onblur="validateMod(this)">
+</form>
+
+<datalist id="mods_choices">
+<option value="Normal" />
+<option value="Split" />
+</datalist>
+
+
+
+var modOptions = ['Normal', 'Split'];
+
+var disableFields = {
+	'Normal': ['low', 'split', 'high'],
+  'Split': ['desc'],
+  'Ballpark Single': ['low', 'split', 'high'],
+  'Ballpark Open': [],
+  'Ballpark HR': ['low', 'split', 'high'],
+  'Ballpark HR Split': ['desc'],
+  'Injury Chance': ['low', 'split', 'high'],
+  'Clutch': ['low', 'split', 'high'],
+  'Fatigue': ['low', 'split', 'high'],
+};
+
+function disableForMods(fields, arr) {
+	arr.forEach(val => {
+  	console.log(fields.length);
+  	fields[val].disabled = true;
+    fields[val].style.backgroundColor = '#CCCCCC';
+	});
+}
+
+function validateMod(el) {
+	var rollForm = el.parentNode;
+  if (rollForm.className.includes('roll-result')) {
+  } else {
+  	return;
+  }
+  var formFields = {};
+  for (i=0; i<rollForm.children.length; i++) {
+  	formFields[rollForm.children[i].name] = rollForm.children[i];
+  }
+  if (!modOptions.includes(formFields.modifier.value)) {
+  	formFields.modifier.style.borderColor = '#FF0000';
+  } else {
+  	formFields.modifier.style.borderColor = '#00FF00';
+  }
+  if (!modOptions.includes(formFields.modifier.value)) {
+  	var disFields = ['desc', 'split', 'low', 'high'];
+  	disableForMods(formFields, disFields);
+  }
+/*   if (formFields.modifier.value == 'Normal') {
+    var disFields = ['low', 'split', 'high'];
+    disFields.forEach(val => {
+      formFields[val].disabled = true;
+      formFields[val].style.backgroundColor = '#CCCCCC';
+    });
+  } else if ((formFields.modifier.value == 'Split')) {
+    var disFields = ['desc'];
+    disFields.forEach(val => {
+      formFields[val].disabled = true;
+      formFields[val].style.backgroundColor = '#CCCCCC';
+  } */
+  /* Array.from(rollForms[0].children).forEach(x => {
+    console.log(x.placeholder);
+  }); */
+/*   for (i=0; i<modFields.length; i++) {
+    if (!modOptions.includes(modFields[i].value)) {
+      modFields[i].style.borderColor = '#FF0000';
+    } else {
+      modFields[i].style.borderColor = '#00FF00';
+    }
+  } */
+
+}

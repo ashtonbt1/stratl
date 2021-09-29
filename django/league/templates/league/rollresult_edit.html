@@ -1,5 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'league/base.html' %}
 
 {% block content %}
-<p>Not implemented</p>
+{% if formset|length == 198 %}
+{% for f in formset %}
+<form class="form-inline roll-result">{% csrf_token %}{{ f }}</form>
+{% endfor %}
+{% else %}
+<p>Invalid number of rows ({{ formset|length }}), should be 66 across 6 columns.</p>
+{% endif %}
 {% endblock %}

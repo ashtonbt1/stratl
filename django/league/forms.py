@@ -19,6 +19,13 @@ class PositionForm(forms.ModelForm):
 
 class RollResultForm(forms.ModelForm):
 
+    # Constructing custom form, not sure if necessary or if I can
+    # get JS to just take the form as is
+    # card_id = forms.TextInput(widget=forms.HiddenInput())
+    # column = forms.TextInput(widget=forms.HiddenInput())
+    # d6_roll = forms.TextInput(widget=forms.HiddenInput())
+    # modifier = forms.TextInput()
+
     class Meta:
         model = RollResult
         fields = ('card', 'column', 'd6_roll', 'modifier',

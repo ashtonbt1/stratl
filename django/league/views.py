@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render, render_to_response
 from tablib import Dataset
 
-from .models import Player, Position, Hitter
+from .models import Player, Position, Hitter, Card
 from .forms import PlayerForm, PositionForm, RollResultFormSet
 from .resources import PlayerResource
 
@@ -63,11 +63,13 @@ def simple_upload(request):
     
     return render(request, 'league/simple_upload.html')
 
-def build_card_results(request, card_id):
+def build_card_results(request, pk):
+    card = get_object_or_404(Card, pk=pk)
+    card_id = card.pk
     if request.method == 'POST':
         formset = RollResultFormSet(card_id=card_id, data=request.POST)
         if formset.is_valid():
             formset.save()
     else:
         formset = RollResultFormSet(card_id=card_id)
-    return render_to_response('rollresult_edit.html', {'formset': formset})
+    return render_to_response('league/rollresult_edit.html', {'formset': formset, 'nrows': 11})
