@@ -1,7 +1,7 @@
 {% extends 'league/base.html' %}
 
 {% block content %}
-{% if formset|length == 198 %}
+{% if formset|length == 66 %}
 {% for f in formset %}
 <form class="form-inline roll-result">{% csrf_token %}{{ f }}</form>
 {% endfor %}

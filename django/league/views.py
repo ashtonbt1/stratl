@@ -1,8 +1,10 @@
+from django.forms.formsets import formset_factory
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render, render_to_response
 from tablib import Dataset
 
 from .models import Player, Position, Hitter, Card
-from .forms import PlayerForm, PositionForm, RollResultFormSet
+from .forms import HitterForm, PlayerForm, PositionForm, RollResultForm, RollResultFormSet
 from .resources import PlayerResource
 
 # Create your views here.
@@ -63,13 +65,40 @@ def simple_upload(request):
     
     return render(request, 'league/simple_upload.html')
 
-def build_card_results(request, pk):
-    card = get_object_or_404(Card, pk=pk)
-    card_id = card.pk
+def hitter_new(request):
     if request.method == 'POST':
-        formset = RollResultFormSet(card_id=card_id, data=request.POST)
-        if formset.is_valid():
-            formset.save()
+        form = HitterForm(request.POST)
+        if form.is_valid():
+            hitter = form.save(commit=False)
+            hitter.save()
+            return redirect('hitter_detail', pk=hitter.pk)
     else:
-        formset = RollResultFormSet(card_id=card_id)
-    return render_to_response('league/rollresult_edit.html', {'formset': formset, 'nrows': 11})
+        form = HitterForm()
+    return render(request, 'league/hitter_edit.html', {'form': form})
+
+def generate_init_vals_roll_results(pk):
+    ilist = list()
+    nforms = 66
+    nrows = 11
+    for i in range(nforms):
+        col = int(i / nrows) + 1
+        row = (i % nrows) + 2
+        form_dict = {
+            'card': pk,
+            'column': col,
+            'd6_roll': row
+        }
+        ilist.append(form_dict)
+    return ilist
+
+def build_card_results(request, pk):
+    RollResultFormSet = formset_factory(RollResultForm, extra=66, max_num=66)
+    if request.method == 'POST':
+        formset = RollResultFormSet(request.POST)
+        if formset.is_valid():
+            hitter = get_object_or_404(Hitter, pk=pk)
+            return redirect('hitter_detail', pk=hitter.pk)
+    else:
+        init_list = generate_init_vals_roll_results(pk)
+        formset = RollResultFormSet(initial=init_list)
+    return render(request, 'league/rollresult_edit.html', {'formset': formset})
