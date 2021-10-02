@@ -1,5 +1,27 @@
 {% extends 'league/base.html' %}
 
-{% content block %}
+{% block content %}
 <h1>{{ hitter }}</h1>
+<h2>Card Header</h2>
+<ul class="list-group list-group-horizontal-sm col-xl-4 col-md-8">
+    <li class="list-group-item flex-fill"><b>Bats:</b> {{ hitter.bats }}</li>
+    <li class="list-group-item flex-fill"><b>LHP Power:</b> {{ hitter.power_lhp }}</li>
+    <li class="list-group-item flex-fill"><b>RHP Power:</b> {{ hitter.power_rhp }}</li>
+</ul>
+<ul class="list-group list-group-horizontal-sm col-xl-4 col-md-8">
+    <li class="list-group-item flex-fill"><b>Bunting:</b> {{ hitter.bunt }}</li>
+    <li class="list-group-item flex-fill"><b>Hit &amp; Run:</b> {{ hitter.hnr }}</li>
+    <li class="list-group-item flex-fill"><b>Running:</b> {{ hitter.running }}</li>
+</ul>
+<ul class="list-group list-group-horizontal col-xl-4 col-md-8">
+    <li class="list-group-item flex-fill"><b>Stealing:</b> {{ hitter.steal_str }}</li>
+</ul>
+<h3>Positions</h3>
+{% for p in positions %}
+<p>{{ p }}</p>
+{% endfor %}
+<h3>Roll Chances</h3>
+{% for r in roll_results %}
+<p>{{ r }}</p>
+{% endfor %}
 {% endblock %}

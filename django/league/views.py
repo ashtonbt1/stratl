@@ -1,16 +1,21 @@
+from django.core.paginator import Paginator
 from django.forms.formsets import formset_factory
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render, render_to_response
 from tablib import Dataset
 
-from .models import Player, Position, Hitter, Card
+from .models import Player, Position, Hitter, Card, RollResult
 from .forms import HitterForm, PlayerForm, PositionForm, RollResultForm, RollResultFormSet
 from .resources import PlayerResource
 
 # Create your views here.
 def player_list(request):
     players = Player.objects.all()
-    return render(request, 'league/player_list.html', {'players': players})
+    paginator = Paginator(players, 20)
+
+    page_num = request.GET.get('page')
+    page_obj = paginator.get_page(page_num)
+    return render(request, 'league/player_list.html', {'page_obj': page_obj})
 
 def player_detail(request, pk):
     player = get_object_or_404(Player, pk=pk)
@@ -75,6 +80,17 @@ def hitter_new(request):
     else:
         form = HitterForm()
     return render(request, 'league/hitter_edit.html', {'form': form})
+
+def hitter_detail(request, pk):
+    hitter = get_object_or_404(Hitter, pk=pk)
+    positions = Position.objects.filter(hitter=hitter.pk)
+    roll_results = RollResult.objects.filter(card=hitter.pk)
+    return render(request, 'league/hitter_detail.html',
+                    {
+                        'hitter': hitter,
+                        'positions': positions,
+                        'roll_results': roll_results,
+                    })
 
 def generate_init_vals_roll_results(pk):
     ilist = list()

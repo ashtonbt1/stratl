@@ -19,3 +19,7 @@
     flex-flow: row wrap;
     align-items: center;
 }
+
+.list-group-item {
+    border: none;
+}

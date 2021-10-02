@@ -252,6 +252,13 @@ class Hitter(Card):
                            max_length=1)
     running = models.PositiveIntegerField(null=False)
     
+    @property
+    def steal_str(self):
+        stl_str = f"{self.steal_rating} | "
+        stl_str += '*' if self.steal_auto_lead else ""
+        stl_str += f"{self.steal_good_lead.replace('|', ',')}/{self.steal_auto_cs.replace('|', ',')}"
+        stl_str += f" ({self.steal_primary}-{self.steal_secondary})"
+        return stl_str
 
     def __str__(self):
         suffix = f" - {self.card_type}" if self.card_type != 'Standard' else ""
@@ -350,7 +357,7 @@ class RollResult(models.Model):
     high = models.CharField(blank=True, null=True, choices=ROLLRESULT_CHOICES, max_length=60)
 
     def __str__(self):
-        summary = f"{self.column}-{self.column:02}:"
+        summary = f"{self.column}-{self.d6_roll:02}:"
         if self.modifier:
             summary = summary + f" ({self.modifier})"
         if self.desc:
